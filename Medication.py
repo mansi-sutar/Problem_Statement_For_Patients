@@ -48,3 +48,31 @@ def add_medication():
     db.session.commit()
     return "Medication details added...!!!"
 
+@app.route('/delete_medication/<medication_id>',methods = ['DELETE'])
+def delete_medication(medication_id):
+    medication = Medication.query.get(medication_id)
+    if medication is None:
+        return "Id not found...!!!"
+    db.session.delete(medication)
+    db.session.commit()
+    return "Medication deleted...!!!"
+
+@app.route('/update_medication/<medication_id>',methods = ['PUT'])
+def update_medication(medication_id):
+   data = request.get_json()
+   medication = Medication.query.get(medication_id)
+   if medication is None:
+       return "Id not found..!!!"
+   if data.get('Medication_Name'):
+       medication.Medication_Name = data['Medication_Name']
+   if data.get('Dose'):
+       medication.Dose = data['Dose']
+   if data.get('Frequency'):
+       medication.Frequency = data['Frequency']
+   if data.get('Intake_Type'):
+    medication.Intake_Type = data['Intake_Type']
+   db.session.add(medication)
+   db.session.commit()
+   return "Medication details updated...!!!"
+
+
