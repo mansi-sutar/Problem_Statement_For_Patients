@@ -17,3 +17,26 @@ class Patient(db.Model):
         self.First_Name = First_Name
         self.Last_Name = Last_Name
         self.Dob = Dob
+
+@app.route('/')
+def home():
+    return 'Welcome...!!!'
+
+@app.route('/patients_details')
+def patients_details():
+    patients = Patient.query.all()
+    output = []
+    for patient in patients:
+        patient_data ={'Patient_ID' : patient.Patient_ID,'First_Name' : patient.First_Name,'Last_Name' : patient.Last_Name,'Dob' : patient.Dob}
+        output.append(patient_data)
+    return { "Patients" : output }
+
+@app.route('/add_patient',methods = ['POST'])
+def add_patient():
+    patient = Patient(Patient_ID = request.json['Patient_ID'],
+                      First_Name = request.json['First_Name'],
+                      Last_Name = request.json['Last_Name'],
+                      Dob = request.json['Dob'])
+    db.session.add(patient)
+    db.session.commit()
+    return "Patient details added...!!!"
