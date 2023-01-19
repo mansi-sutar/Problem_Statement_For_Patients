@@ -19,3 +19,27 @@ class Measurement (db.Model):
         self.Patient_ID = Patient_ID
         self.Unit = Unit
         self.Value = Value
+
+@app.route('/add_measurement',methods = ['POST'])
+def add_measurement():
+    measurement = Measurement(Measurement_ID = request.json['Measurement_ID'],
+                             Patient_ID = request.json['Patient_ID'],
+                             Measurement_Name = request.json['Measurement_Name'],
+                             Unit = request.json['Unit'],
+                             Value = request.json['Value'])
+    db.session.add(measurement)
+    db.session.commit()
+    return "Measurement details added...!!!"
+
+@app.route('/measurement_details')
+def measurement_details():
+    measurements = Measurement.query.all()
+    output = []
+    for measurement in measurements:
+        measurement_data ={'Measurement_ID' : measurement.Measurement_ID,
+                           'Patient_ID' : measurement.Patient_ID,
+                           'Measurement_Name' : measurement.Measurement_Name,
+                           'Unit' : measurement.Unit,
+                           'Value' : measurement.Value}
+        output.append(measurement_data)
+    return { "Measurements " : output }
