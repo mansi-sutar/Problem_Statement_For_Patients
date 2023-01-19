@@ -21,3 +21,30 @@ class Medication(db.Model):
         self.Dose = Dose
         self.Frequency = Frequency
         self.Intake_Type = Intake_Type
+
+@app.route('/medication_details')
+def medication_details():
+    medications = Medication.query.all()
+    output = []
+    for medication in medications:
+        medications_data ={'Medication_ID' : medication.Medication_ID,
+                           'Patient_ID' : medication.Patient_ID,
+                           'Medication_Name' : medication.Medication_Name,
+                           'Dose' : medication.Dose,
+                           'Frequency' : medication.Frequency,
+                           'Intake_Type' : medication.Intake_Type }
+        output.append(medications_data)
+    return { "Medications " : output }
+
+@app.route('/add_medication',methods = ['POST'])
+def add_medication():
+    medications = Medication(Medication_ID = request.json['Medication_ID'],
+                             Patient_ID = request.json['Patient_ID'],
+                             Medication_Name = request.json['Medication_Name'],
+                             Dose = request.json['Dose'],
+                             Frequency = request.json['Frequency'],
+                             Intake_Type = request.json['Intake_Type'])
+    db.session.add(medications)
+    db.session.commit()
+    return "Medication details added...!!!"
+
