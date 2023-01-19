@@ -40,3 +40,28 @@ def add_patient():
     db.session.add(patient)
     db.session.commit()
     return "Patient details added...!!!"
+
+@app.route('/delete_patient/<patient_id>',methods = ['DELETE'])
+def delete_patient(patient_id):
+    patient = Patient.query.get(patient_id)
+    if patient is None:
+        return "Id not found...!!!"
+    db.session.delete(patient)
+    db.session.commit()
+    return "Patient deleted...!!!"
+
+@app.route('/update_patient/<patient_id>',methods = ['PUT'])
+def update_patient(patient_id):
+   data = request.get_json()
+   patient = Patient.query.get(patient_id)
+   if patient is None:
+       return "Id not found..!!!"
+   if data.get('First_Name'):
+       patient.First_Name = data['title']
+   if data.get('Last_Name'):
+       patient.Last_Name = data['Last_Name']
+   if data.get('Dob'):
+       patient.Dob = data['Dob']
+   db.session.add(patient)
+   db.session.commit()
+   return "Patient details updated...!!!"
