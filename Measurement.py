@@ -43,3 +43,29 @@ def measurement_details():
                            'Value' : measurement.Value}
         output.append(measurement_data)
     return { "Measurements " : output }
+
+@app.route('/delete_measurement/<measurement_id>',methods = ['DELETE'])
+def delete_measurement(measurement_id):
+    measurement = Measurement.query.get(measurement_id)
+    if measurement is None:
+        return "Id not found...!!!"
+    db.session.delete(measurement)
+    db.session.commit()
+    return "Measurement deleted...!!!"
+
+@app.route('/update_measurement/<measurement_id>',methods = ['PUT'])
+def update_measurement(measurement_id):
+   data = request.get_json()
+   measurement = Measurement.query.get(measurement_id)
+   if measurement is None:
+       return "Id not found..!!!"
+   if data.get('Measurement_Name'):
+       measurement.Measurement_Name = data['Measurement_Name']
+   if data.get('Unit'):
+       measurement.Unit = data['Unit']
+   if data.get('Value'):
+       measurement.Value = data['Value']
+   db.session.add(measurement)
+   db.session.commit()
+   return "Measurement details updated...!!!"
+
