@@ -43,3 +43,33 @@ def add_allergy():
     db.session.add(allergy)
     db.session.commit()
     return "Allergy details added...!!!"
+
+@app.route('/delete_allergy/<allergy_id>',methods = ['DELETE'])
+def delete_allergy(allergy_id):
+    allergy = Allergies.query.get(allergy_id)
+    if allergy is None:
+        return "Id not found...!!!"
+    db.session.delete(allergy)
+    db.session.commit()
+    return "Allergy Details Deleted...!!!"
+
+@app.route('/update_allergy/<allergy_id>',methods = ['PUT'])
+def update_allergy(allergy_id):
+   data = request.get_json()
+   allergy = Allergies.query.get(allergy_id)
+   if allergy is None:
+       return "Id not found..!!!"
+   if data.get('Patient_ID'):
+       allergy.Patient_ID = data['Patient_ID']
+   if data.get('Name'):
+      allergy.Name = data['Name']
+   if data.get('Allergy_type'):
+      allergy.Allergy_type = data['Allergy_type']
+   if data.get('Reference_id'):
+      allergy.Reference_id = data['Reference_id']
+   db.session.add(allergy)
+   db.session.commit()
+   return "Allergy details updated...!!!"
+
+
+
