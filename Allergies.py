@@ -19,3 +19,27 @@ class Allergies(db.Model):
         self.Name = Name
         self.Allergy_type = Allergy_type
         self.Reference_id = Reference_id
+
+@app.route('/allergy_details')
+def allergy_details():
+    allergys = Allergies.query.all()
+    output = []
+    for allergy in allergys:
+        allergy_data ={'Allergy_ID' : allergy.Allergy_ID,
+                           'Patient_ID' : allergy.Patient_ID,
+                           'Name' : allergy.Name,
+                            'Allergy_type' : allergy.Allergy_type,
+                            'Reference_id' : allergy.Reference_id }
+        output.append(allergy_data)
+    return { "Allergy " : output }
+
+@app.route('/add_allergy',methods = ['POST'])
+def add_allergy():
+    allergy = Allergies( Allergy_ID = request.json['Allergy_ID'],
+                         Patient_ID = request.json['Patient_ID'],
+                         Name = request.json['Name'],
+                         Allergy_type = request.json['Allergy_type'],
+                         Reference_id = request.json['Reference_id'])
+    db.session.add(allergy)
+    db.session.commit()
+    return "Allergy details added...!!!"
